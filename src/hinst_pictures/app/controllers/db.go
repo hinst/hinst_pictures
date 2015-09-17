@@ -10,10 +10,9 @@ func (c DB) Test() revel.Result {
 	var transaction = OpenTransaction()
 	var databaseSizeRow = transaction.transaction.QueryRow(databaseSizeQuery)
 	var databaseSize int
-	databaseSizeRow.Scan(databaseSize)
+	databaseSizeRow.Scan(&databaseSize)
 	var databaseSizeText = formatInteger(databaseSize)
-	revel.TRACE.Print("databaseSizeText = " + databaseSizeText)
-	c.Args["databaseSize"] = databaseSizeText
+	c.RenderArgs["databaseSize"] = databaseSizeText
 	transaction.Close()
 	return c.Render()
 }

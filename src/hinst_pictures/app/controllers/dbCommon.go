@@ -6,7 +6,7 @@ import "github.com/revel/revel"
 
 const globalDatabaseType = "firebirdsql"
 const globalDatabaseKey = "hinst_pictures:hinst_pictures@localhost/hinst_pictures"
-const databaseSizeQuery = "SELECT MON$DATABASE_NAME, (MON$PAGE_SIZE * MON$PAGES)"
+const databaseSizeQuery = "SELECT (MON$PAGE_SIZE * MON$PAGES) from MON$DATABASE"
 
 func dbConnect() *sql.DB {
 	conn, result := sql.Open(globalDatabaseType, globalDatabaseKey)

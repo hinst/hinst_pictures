@@ -1,0 +1,1 @@
+grant RDB$ADMIN to hinst_pictures;

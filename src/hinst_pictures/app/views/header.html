@@ -7,10 +7,6 @@
 		<link rel="stylesheet" type="text/css" href="/hinst_pictures/public/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/hinst_pictures/public/css/bootstrap-theme.css">
 		<link rel="shortcut icon" type="image/png" href="/hinst_pictures/public/img/favicon.png">
-		<!--<script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>-->
-		{{range .moreScripts}}
-			<script src="/hinst_pictures/public/{{.}}" type="text/javascript" charset="utf-8"></script>
-		{{end}}
   	</head>
 	<body>
 		<ul class="nav nav-tabs">
@@ -19,3 +15,4 @@
 			<li role="presentation"><a href="#">View data</a></li>
 			<li role="presentation"><a href="{{url "db.Test"}}">DB.Test</a></li>
 		</ul>
+		<div class="container">
