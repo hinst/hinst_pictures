@@ -18,14 +18,15 @@ func dbConnect() *sql.DB {
 	}
 }
 
-func OpenTransaction() Transaction {
-	var result Transaction
-	result.connection = dbConnect()
-	result.transaction = nil
-	if result.connection != nil {
-		var transaction, beginTransactionResult = result.connection.Begin()
+func OpenTransaction() *TTransaction {
+	var result *TTransaction = nil
+	var connection = dbConnect()
+	if connection != nil {
+		var transaction, beginTransactionResult = connection.Begin()
 		if beginTransactionResult == nil {
-			result.transaction = transaction
+			result = &TTransaction{}
+			result.Tx = transaction
+			result.Connection = connection
 		} else {
 			revel.ERROR.Print(beginTransactionResult)
 		}

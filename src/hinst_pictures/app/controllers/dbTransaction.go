@@ -2,33 +2,23 @@ package controllers
 
 import "database/sql"
 
-type Transaction struct {
-	connection  *sql.DB
-	transaction *sql.Tx
+type TTransaction struct {
+	*sql.Tx
+	Connection *sql.DB
 }
 
-func (this *Transaction) Close() {
-	if this.transaction != nil {
-		this.transaction.Rollback()
-		this.transaction = nil
-	}
-	if this.connection != nil {
-		this.connection.Close()
-		this.connection = nil
+func (this *TTransaction) Close() {
+	this.Rollback()
+	if this.Connection != nil {
+		this.Connection.Close()
+		this.Connection = nil
 	}
 }
 
-func (this *Transaction) Commit() {
-	if this.transaction != nil {
-		this.transaction.Commit()
-		this.transaction = nil
+func (this *TTransaction) Commit() {
+	this.Commit()
+	if this.Connection != nil {
+		this.Connection.Close()
+		this.Connection = nil
 	}
-	if this.connection != nil {
-		this.connection.Close()
-		this.connection = nil
-	}
-}
-
-func (this *Transaction) Valid() bool {
-	return (this.connection != nil) && (this.transaction != nil)
 }

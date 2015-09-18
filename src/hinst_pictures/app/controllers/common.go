@@ -1,6 +1,7 @@
 package controllers
 
 import "strconv"
+import "runtime"
 
 func formatInteger(x int) string {
 	var text = strconv.Itoa(x)
@@ -13,4 +14,16 @@ func formatInteger(x int) string {
 		}
 	}
 	return formattedText
+}
+
+func getCallStackText() string {
+	const callStackTextLengthLimit = 64 * 1024
+	var callStackTextData = make([]byte, callStackTextLengthLimit)
+	var callStackTextLength = runtime.Stack(callStackTextData, true)
+	var callStackText = string(callStackTextData[:callStackTextLength])
+	return callStackText
+}
+
+func exceptionToText(e error) string {
+	return e.Error() + "\n" + getCallStackText()
 }
