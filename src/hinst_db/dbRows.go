@@ -1,9 +1,7 @@
 package hinst_db
 
-import "database/sql"
-
 type TField struct {
-	Field *interface{}
+	Field interface{}
 	Name  string
 }
 
@@ -21,4 +19,13 @@ func GetFieldsString(row IRow) string {
 		}
 	}
 	return result
+}
+
+func FieldsToScanInterfaces(source []TField) (result []interface{}) {
+	var n = len(source)
+	result = make([]interface{}, n)
+	for i := range source {
+		result[i] = source[i]
+	}
+	return
 }
