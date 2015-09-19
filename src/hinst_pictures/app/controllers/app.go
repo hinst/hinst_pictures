@@ -1,10 +1,11 @@
 package controllers
 
 import "github.com/revel/revel"
+import db "hinst_db"
 
 type App struct {
 	*revel.Controller
-	Transaction *TTransaction
+	Transaction *db.TTransaction
 }
 
 func (this *App) Index() revel.Result {

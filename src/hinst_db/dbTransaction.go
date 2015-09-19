@@ -1,4 +1,4 @@
-package controllers
+package hinst_db
 
 import "database/sql"
 

@@ -1,4 +1,3 @@
-*
-!hinst_pictures
-!.gitignore
-!dependencies.zip
+github.com
+golang.org
+gopkg.in
