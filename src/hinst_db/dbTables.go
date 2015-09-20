@@ -21,7 +21,10 @@ func (this *TTable) Load() {
 		defer rows.Close()
 		for rows.Next() {
 			var row = this.RowConstructor()
-			row.GetFields()
+			var fields = row.GetFields()
+			var scanInterfaces = FieldsToScanInterfaces(fields)
+			rows.Scan(scanInterfaces...)
+			this.Rows = append(this.Rows, row)
 		}
 	}
 }
