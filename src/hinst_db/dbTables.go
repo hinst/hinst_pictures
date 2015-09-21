@@ -1,6 +1,7 @@
 package hinst_db
 
 import "database/sql"
+import "errors"
 
 type TTable struct {
 	RowConstructor func() IRow
@@ -11,8 +12,17 @@ type TTable struct {
 }
 
 func (this *TTable) Load() {
-	this.Rows = nil
-	var query string = "select " + GetFieldsString(this.RowConstructor()) + " from '" + this.TableName + "'"
+	this.Rows = []IRow{}
+	if this.RowConstructor == nil {
+		panic(errors.New("RowConstructor not assigned"))
+	}
+	if this.Transaction == nil {
+		panic(errors.New("Transaction not assigned"))
+	}
+	if this.TableName == "" {
+		panic(errors.New(""))
+	}
+	var query = "select " + GetFieldsStringFromRow(this.RowConstructor()) + " from \"" + this.TableName + "\""
 	if len(this.Where) > 0 {
 		query = query + " where " + this.Where
 	}
@@ -22,9 +32,30 @@ func (this *TTable) Load() {
 		for rows.Next() {
 			var row = this.RowConstructor()
 			var fields = row.GetFields()
-			var scanInterfaces = FieldsToScanInterfaces(fields)
-			rows.Scan(scanInterfaces...)
+			var fieldFaces = GetScanInterfacesFromFields(fields)
+			rows.Scan(fieldFaces...)
 			this.Rows = append(this.Rows, row)
 		}
 	}
+}
+
+// Using Firebird "update or insert" SQL feature.
+func (this *TTable) Save() {
+	if len(this.Rows) > 0 {
+		var firstRow = this.Rows[0]
+		var statementText = "update or insert into \"" + this.TableName + "\" " +
+			"(" + GetFieldsStringFromRow(firstRow) + ") " +
+			"values (" + GetValuesTemplateStringFromRow(firstRow) + ")"
+		var statement, statementResult = this.Transaction.Prepare(statementText)
+		if statementResult == nil {
+			defer statement.Close()
+			for i := range this.Rows {
+				var row = this.Rows[i]
+				var fields = row.GetFields()
+				var fieldFaces = GetScanInterfacesFromFields(fields)
+				statement.Exec(fieldFaces...)
+			}
+		}
+	}
+
 }
