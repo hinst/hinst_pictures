@@ -56,7 +56,7 @@ func (this *App) checkUser() {
 	}
 }
 
-func (this *App) GetUserTable() *TUserTable {
+func (this *App) GetUsersTable() *TUserTable {
 	if nil == this.userTable {
 		this.userTable = CreateUserTable()
 		this.userTable.Transaction = this.Transaction.Tx
