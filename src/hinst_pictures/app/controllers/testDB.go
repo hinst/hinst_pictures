@@ -8,5 +8,6 @@ func (this *App) TestDB() revel.Result {
 	databaseSizeRow.Scan(&databaseSize)
 	var databaseSizeText = formatInteger(databaseSize)
 	this.RenderArgs["databaseSize"] = databaseSizeText
+	this.RenderArgs["userTableExists"] = this.GetUserTable().CheckTableExists()
 	return this.Render()
 }

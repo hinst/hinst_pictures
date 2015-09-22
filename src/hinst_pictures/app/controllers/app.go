@@ -1,11 +1,13 @@
 package controllers
 
 import "github.com/revel/revel"
-import db "hinst_db"
+import "hinst_db"
 
 type App struct {
 	*revel.Controller
-	Transaction *db.TTransaction
+	Transaction *hinst_db.TTransaction
+	User        *TUserRow
+	userTable   *TUserTable
 }
 
 func (this *App) Index() revel.Result {
@@ -42,4 +44,22 @@ func (this *App) finalize() revel.Result {
 func init() {
 	revel.InterceptMethod((*App).prepare, revel.BEFORE)
 	revel.InterceptMethod((*App).finalize, revel.AFTER)
+}
+
+func (this *App) checkUser() {
+	var cookies = this.Request.Cookies()
+	for i := range cookies {
+		var cookie = cookies[i]
+		if cookie.Name == UserNameCookieName {
+
+		}
+	}
+}
+
+func (this *App) GetUserTable() *TUserTable {
+	if nil == this.userTable {
+		this.userTable = CreateUserTable()
+		this.userTable.Transaction = this.Transaction.Tx
+	}
+	return this.userTable
 }

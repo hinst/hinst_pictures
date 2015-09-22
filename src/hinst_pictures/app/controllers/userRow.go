@@ -15,6 +15,12 @@ func CreateUserRow() *TUserRow {
 	return &TUserRow{}
 }
 
+func CreateUserRowAsIRow() hinst_db.IRow {
+	var row = CreateUserRow()
+	var iRow hinst_db.IRow = row
+	return iRow
+}
+
 func (this *TUserRow) GetFields() []hinst_db.TField {
 	return []hinst_db.TField{
 		hinst_db.TField{Field: &this.Name, Name: "Name"},

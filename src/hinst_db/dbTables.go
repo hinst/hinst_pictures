@@ -11,17 +11,25 @@ type TTable struct {
 	Rows           []IRow
 }
 
+func (this *TTable) assertTransactionAssigned() {
+	if this.Transaction == nil {
+		panic(errors.New("Transaction not assigned"))
+	}
+}
+
+func (this *TTable) assertTableNameAssigned() {
+	if this.TableName == "" {
+		panic(errors.New(""))
+	}
+}
+
 func (this *TTable) Load() {
 	this.Rows = []IRow{}
 	if this.RowConstructor == nil {
 		panic(errors.New("RowConstructor not assigned"))
 	}
-	if this.Transaction == nil {
-		panic(errors.New("Transaction not assigned"))
-	}
-	if this.TableName == "" {
-		panic(errors.New(""))
-	}
+	this.assertTransactionAssigned()
+	this.assertTableNameAssigned()
 	var query = "select " + GetFieldsStringFromRow(this.RowConstructor()) + " from \"" + this.TableName + "\""
 	if len(this.Where) > 0 {
 		query = query + " where " + this.Where
@@ -57,5 +65,20 @@ func (this *TTable) Save() {
 			}
 		}
 	}
+}
 
+// Using Firebird RDB$RELATIONS table.
+func (this *TTable) CheckTableExists() bool {
+	var result = false
+	this.assertTableNameAssigned()
+	this.assertTransactionAssigned()
+	var query = "select 1 from RDB$RELATIONS where RDB$RELATION_NAME=\"" + this.TableName + "\""
+	var rows, queryResult = this.Transaction.Query(query)
+	if queryResult == nil {
+		defer rows.Close()
+		if rows.Next() {
+			result = true
+		}
+	}
+	return result
 }
