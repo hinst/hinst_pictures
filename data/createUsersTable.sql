@@ -1,2 +1,0 @@
-CREATE TABLE "Users" ("Name" varchar(100) primary key, "Password" varchar(100), "Admin" integer, "CreationDate" date);
-CREATE TABLE "Sessions" ("Name" varchar(100), "SessionKey" varchar(100), "LastRequest" date, primary key ("Name", "SessionKey"));
