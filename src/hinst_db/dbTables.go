@@ -72,13 +72,15 @@ func (this *TTable) CheckTableExists() bool {
 	var result = false
 	this.assertTableNameAssigned()
 	this.assertTransactionAssigned()
-	var query = "select 1 from RDB$RELATIONS where RDB$RELATION_NAME=\"" + this.TableName + "\""
+	var query = "select 1 from RDB$RELATIONS where RDB$RELATION_NAME='" + this.TableName + "'"
 	var rows, queryResult = this.Transaction.Query(query)
 	if queryResult == nil {
 		defer rows.Close()
 		if rows.Next() {
 			result = true
 		}
+	} else {
+		panic(queryResult)
 	}
 	return result
 }
